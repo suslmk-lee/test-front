@@ -25,6 +25,8 @@ spec:
       labels:
         app: test-front
     spec:
+      imagePullSecrets:
+        - name: ncr
       containers:
       - name: test-front
         image: 44ce789b-kr1-registry.container.nhncloud.com/container-platform-registry/test-front:latest
