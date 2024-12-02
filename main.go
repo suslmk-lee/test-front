@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const backendURL = "http://localhost:8080/data" // 백엔드 URL
+const backendURL = "test-back.iot-edge.svc.cluster.local/data" // 백엔드 URL
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
