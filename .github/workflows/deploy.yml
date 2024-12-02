@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: "test-back"
+      IMAGE_NAME: "test-front"
       REGISTRY: "44ce789b-kr1-registry.container.nhncloud.com/container-platform-registry"
       NAMESPACE: "iot-edge"
       DEPLOYMENT_NAME: "test-front"
@@ -38,10 +38,4 @@ jobs:
         run: |
           docker build -t $REGISTRY/$IMAGE_NAME:latest .
           docker push $REGISTRY/$IMAGE_NAME:latest
-
-      - name: Set up Kubernetes
-        uses: azure/k8s-set-context@v2
-        with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.KUBECONFIG_DATA }}
 
