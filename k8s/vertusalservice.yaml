@@ -22,3 +22,7 @@ spec:
         port:
           number: 80
       weight: 50
+    timeout: 15s
+    retries:
+      attempts: 3
+      perTryTimeout: 5s

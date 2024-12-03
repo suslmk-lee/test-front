@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pod Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .info-group {
+            margin-bottom: 15px;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .refresh-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .refresh-button:hover {
+            background-color: #45a049;
+        }
+        .ip-address {
+            background-color: #f8f9fa;
+            padding: 5px 10px;
+            margin: 2px 0;
+            border-radius: 4px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="refresh-button" onclick="fetchData()">Refresh Data</button>
+        
+        <div class="info-group">
+            <div class="info-label">Hostname:</div>
+            <div id="hostname"></div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">IP Addresses:</div>
+            <div id="ip-addresses"></div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">Time Information:</div>
+            <div id="time-info"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

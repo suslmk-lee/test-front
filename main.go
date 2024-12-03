@@ -5,16 +5,20 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"strings"
 )
 
 const backendURL = "http://test-back.iot-edge.svc.cluster.local/data"
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	// Serve static files
+	fs := http.FileServer(http.Dir("."))
+	http.Handle("/", fs)
+
+	// Data endpoint
+	http.HandleFunc("/data", func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Calling backend at: %s", backendURL)
 
-		// 백엔드 호출
+		// Call backend
 		resp, err := http.Get(backendURL)
 		if err != nil {
 			log.Printf("Detailed error: %+v", err)
@@ -23,7 +27,7 @@ func main() {
 		}
 		defer resp.Body.Close()
 
-		// 응답 상태 코드 로깅
+		// Log response status code
 		log.Printf("Backend response status: %d", resp.StatusCode)
 
 		if resp.StatusCode != http.StatusOK {
@@ -32,7 +36,7 @@ func main() {
 			return
 		}
 
-		// 응답 데이터 읽기
+		// Read response data
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			http.Error(w, "Failed to read backend response", http.StatusInternalServerError)
@@ -40,32 +44,13 @@ func main() {
 			return
 		}
 
-		// 값만 추출 (Value: 이후의 값)
-		data := strings.TrimPrefix(string(body), "Value: ")
-
-		// HTML 응답 생성
-		html := fmt.Sprintf(`
-			<!DOCTYPE html>
-			<html lang="en">
-			<head>
-				<meta charset="UTF-8">
-				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-				<title>Frontend</title>
-			</head>
-			<body>
-				<h1>Backend Value</h1>
-				<p>The value is: <strong>%s</strong></p>
-			</body>
-			</html>
-		`, data)
-
-		// HTML 응답 전송
-		w.Header().Set("Content-Type", "text/html")
+		// Set JSON content type
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(html))
+		w.Write(body)
 	})
 
-	// 프론트엔드 서버 실행
+	// Start frontend server
 	port := "8081"
 	log.Printf("Frontend server is running on port %s", port)
 	if err := http.ListenAndServe(":"+port, nil); err != nil {

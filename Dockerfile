@@ -7,18 +7,22 @@ ENV GO111MODULE=on \
 
 WORKDIR /build
 
+# Copy go files
 COPY go.mod go.sum main.go ./
 
 RUN go mod download
 RUN go mod tidy
 RUN go build -o main .
 
-WORKDIR /dist
+FROM alpine:latest
 
-RUN cp /build/main .
+WORKDIR /app
 
-FROM scratch
+# Copy the binary from builder
+COPY --from=builder /build/main .
 
-COPY --from=builder /dist/main .
+# Copy static files
+COPY index.html .
+COPY script.js .
 
-ENTRYPOINT ["/main"]
+ENTRYPOINT ["/app/main"]
