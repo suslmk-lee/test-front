@@ -12,14 +12,25 @@ const backendURL = "http://test-back.iot-edge.svc.cluster.local/data"
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("Calling backend at: %s", backendURL)
+
 		// 백엔드 호출
 		resp, err := http.Get(backendURL)
 		if err != nil {
-			http.Error(w, "Failed to fetch data from backend", http.StatusInternalServerError)
-			log.Printf("Error fetching backend data: %v", err)
+			log.Printf("Detailed error: %+v", err)
+			http.Error(w, fmt.Sprintf("Failed to fetch data from backend: %v", err), http.StatusInternalServerError)
 			return
 		}
 		defer resp.Body.Close()
+
+		// 응답 상태 코드 로깅
+		log.Printf("Backend response status: %d", resp.StatusCode)
+
+		if resp.StatusCode != http.StatusOK {
+			log.Printf("Backend returned non-200 status: %d", resp.StatusCode)
+			http.Error(w, fmt.Sprintf("Backend returned status: %d", resp.StatusCode), resp.StatusCode)
+			return
+		}
 
 		// 응답 데이터 읽기
 		body, err := ioutil.ReadAll(resp.Body)

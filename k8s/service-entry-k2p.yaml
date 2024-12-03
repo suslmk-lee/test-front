@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: test-back-k2p
+  namespace: iot-edge
+spec:
+  hosts:
+  - test-back.iot-edge.svc.cluster.local
+  location: MESH_INTERNAL
+  ports:
+  - name: http
+    number: 80
+    protocol: HTTP
+  - name: tls
+    number: 15443
+    protocol: TLS
+  resolution: DNS
+  endpoints:
+  - address: 210.178.40.122  # k2p cluster Ingress Gateway EXTERNAL-IP
+    ports:
+      http: 80
+      tls: 15443
+    labels:
+      cluster: kpaas-k2p
