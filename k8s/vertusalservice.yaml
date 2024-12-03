@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: test-back-vs
+  namespace: iot-edge
+spec:
+  hosts:
+  - test-back.iot-edge.svc.cluster.local
+  gateways:
+  - istio-system/cross-network-gateway
+  http:
+  - route:
+    - destination:
+        host: test-back.iot-edge.svc.cluster.local
+        subset: k2p-cluster
+        port:
+          number: 80
+      weight: 50
+    - destination:
+        host: test-back.iot-edge.svc.cluster.local
+        subset: cocktail-cluster
+        port:
+          number: 80
+      weight: 50
